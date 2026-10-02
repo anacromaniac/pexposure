@@ -44,6 +44,10 @@ struct Cli {
     #[arg(long)]
     update: bool,
 
+    /// Show command-line examples and exit
+    #[arg(long)]
+    usage: bool,
+
     /// [FILE] [AMOUNT] [TICKER]
     #[arg(value_name = "ARG")]
     args: Vec<String>,
@@ -329,6 +333,20 @@ fn split(
     best.expect("at least one subset").1
 }
 
+const USAGE: &str = "\
+usage: pexposure [FILE] [AMOUNT] [TICKER] [OPTIONS]
+
+  pexposure                          nominal drift vs targets
+  pexposure --composition            also show the normalized-to-100 view
+  pexposure 5000                     rank single instruments for a 5000 investment
+  pexposure 5000 LEV15               report after investing 5000 in LEV15
+  pexposure 5000 --split             split 5000 across all instruments
+  pexposure 5000 --split --max 2     split across at most 2 instruments
+  pexposure my.yaml 5000 --split     custom data file (default ~/.pexposure/portfolio.yaml)
+  pexposure --update                 install the latest release
+
+Run `pexposure --help` for the full list of options.";
+
 fn parse_amount(raw: &str) -> Result<f64> {
     raw.replace(',', "")
         .parse()
@@ -367,6 +385,11 @@ fn run_update() -> Result<()> {
 
 fn run() -> Result<()> {
     let cli = Cli::parse();
+
+    if cli.usage {
+        println!("{USAGE}");
+        return Ok(());
+    }
 
     if cli.update {
         return run_update();
