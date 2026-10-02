@@ -68,6 +68,7 @@ pexposure 5000 --split             # split 5000 across all instruments
 pexposure 5000 --split --max 2     # split across at most 2 instruments
 pexposure my.yaml 5000 --split     # custom data file
 pexposure --update                 # install the latest release
+pexposure --usage                  # show command-line examples
 ```
 
 The data file can be given as the first argument; otherwise the default is used.
