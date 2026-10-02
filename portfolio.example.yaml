@@ -1,0 +1,24 @@
+# Example data. Values are made up. Copy to ~/.pexposure/portfolio.yaml and edit.
+
+# Targets are in % of total value. The sum IS the target leverage (1.30x here).
+targets:
+  equities: 0.80
+  treasuries: 0.30
+  gold: 0.20
+
+# Exposure per 1.00 of value. The sum per instrument is its leverage.
+instruments:
+  LEV15: {equities: 0.75, treasuries: 0.75} # 1.5x, split 50/50
+  LEV20: {equities: 1.40, treasuries: 0.60} # 2.0x, tilted to equities
+  WORLD: {equities: 1.00}
+  BONDS: {treasuries: 1.00}
+  METAL: {gold: 1.00}
+
+# Current value per instrument. This is the only part you edit regularly.
+# Sum positions held at different brokers into one line.
+holdings:
+  LEV15: 12000
+  LEV20: 4000
+  WORLD: 15000
+  BONDS: 6000
+  METAL: 3000

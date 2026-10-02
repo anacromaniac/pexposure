@@ -1,0 +1,19 @@
+[package]
+name = "pexposure"
+version = "0.1.0"
+edition = "2024"
+license = "AGPL-3.0-or-later"
+description = "Look-through portfolio allocation report for leveraged and mixed instruments"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+indexmap = { version = "2", features = ["serde"] }
+itertools = "0.14"
+serde = { version = "1", features = ["derive"] }
+serde-saphyr = { version = "1", default-features = false, features = ["deserialize"] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true

@@ -1,0 +1,4 @@
+/target
+
+# never commit personal portfolio data
+/portfolio.yaml
