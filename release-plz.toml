@@ -1,4 +1,8 @@
 [workspace]
+# The crate is not on crates.io, so take the release baseline from git tags.
+git_only = true
+# A feat bumps the minor version even while we are on 0.x.
+features_always_increment_minor = true
 # Let cargo-dist create the GitHub Release with the binaries.
 git_release_enable = false
 # Tag format that cargo-dist parses.
