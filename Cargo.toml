@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2024"
 license = "AGPL-3.0-or-later"
 description = "Look-through portfolio allocation report for leveraged and mixed instruments"
+repository = "https://github.com/anacromaniac/pexposure"
+homepage = "https://github.com/anacromaniac/pexposure"
 
 [dependencies]
 anyhow = "1"
@@ -20,3 +22,8 @@ libc = "0.2"
 lto = true
 codegen-units = 1
 strip = true
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
