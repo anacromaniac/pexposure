@@ -512,7 +512,22 @@ fn run() -> Result<()> {
     Ok(())
 }
 
+/// Rust ignores `SIGPIPE`, so writing to a closed pipe panics. Restore the
+/// default action so `pexposure | head` exits quietly like other Unix tools.
+#[cfg(unix)]
+fn reset_sigpipe() {
+    // SAFETY: only resets a signal handler to its default action, and the
+    // process is still single-threaded here.
+    unsafe {
+        libc::signal(libc::SIGPIPE, libc::SIG_DFL);
+    }
+}
+
+#[cfg(not(unix))]
+fn reset_sigpipe() {}
+
 fn main() -> ExitCode {
+    reset_sigpipe();
     match run() {
         Ok(()) => ExitCode::SUCCESS,
         Err(error) => {
