@@ -536,3 +536,39 @@ fn main() -> ExitCode {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn money_groups_thousands() {
+        assert_eq!(money(0.0), "0");
+        assert_eq!(money(999.0), "999");
+        assert_eq!(money(1000.0), "1,000");
+        assert_eq!(money(30_371.34), "30,371");
+        assert_eq!(money(-2_397.0), "-2,397");
+        assert_eq!(money(1_234_567.0), "1,234,567");
+    }
+
+    #[test]
+    fn rank_prefers_lower_cost_then_fewer_instruments() {
+        let cheaper = Rank {
+            cost: 0.5,
+            used: 3,
+            new_positions: 3,
+        };
+        let fewer = Rank {
+            cost: 1.0,
+            used: 1,
+            new_positions: 5,
+        };
+        let more = Rank {
+            cost: 1.0,
+            used: 2,
+            new_positions: 0,
+        };
+        assert!(cheaper < fewer);
+        assert!(fewer < more);
+    }
+}
