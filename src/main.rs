@@ -13,7 +13,7 @@ use std::cmp::Ordering;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-use anyhow::{Result, anyhow, ensure};
+use anyhow::{Context, Result, anyhow, ensure};
 use clap::Parser;
 use indexmap::IndexMap;
 use itertools::Itertools;
@@ -39,6 +39,10 @@ struct Cli {
     /// Cap the number of instruments used by --split
     #[arg(long, value_name = "N")]
     max: Option<usize>,
+
+    /// Install the latest release, if newer than this build
+    #[arg(long)]
+    update: bool,
 
     /// [FILE] [AMOUNT] [TICKER]
     #[arg(value_name = "ARG")]
@@ -336,8 +340,37 @@ fn default_path() -> Result<PathBuf> {
     Ok(PathBuf::from(home).join(DEFAULT_FILE))
 }
 
+/// Path of the sibling `pexposure-update` program installed by the shell installer.
+fn updater_binary_path(exe: &Path) -> PathBuf {
+    #[cfg(windows)]
+    const NAME: &str = "pexposure-update.exe";
+    #[cfg(not(windows))]
+    const NAME: &str = "pexposure-update";
+    exe.with_file_name(NAME)
+}
+
+/// Install the latest release by running the updater installed alongside this binary.
+fn run_update() -> Result<()> {
+    let exe = std::env::current_exe().context("cannot locate the current executable")?;
+    let updater = updater_binary_path(&exe);
+    ensure!(
+        updater.exists(),
+        "no updater found at {}; reinstall pexposure with the shell installer to enable --update",
+        updater.display()
+    );
+    let status = std::process::Command::new(&updater)
+        .status()
+        .with_context(|| format!("failed to run {}", updater.display()))?;
+    ensure!(status.success(), "the updater exited with {status}");
+    Ok(())
+}
+
 fn run() -> Result<()> {
     let cli = Cli::parse();
+
+    if cli.update {
+        return run_update();
+    }
 
     let mut positional = cli.args.iter();
     let mut file = default_path()?;
@@ -540,6 +573,7 @@ fn main() -> ExitCode {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::path::{Path, PathBuf};
 
     #[test]
     fn money_groups_thousands() {
@@ -570,5 +604,16 @@ mod tests {
         };
         assert!(cheaper < fewer);
         assert!(fewer < more);
+    }
+
+    #[test]
+    fn updater_sits_next_to_the_binary() {
+        let expected = if cfg!(windows) {
+            "pexposure-update.exe"
+        } else {
+            "pexposure-update"
+        };
+        let path = updater_binary_path(Path::new("/usr/bin/pexposure"));
+        assert_eq!(path, PathBuf::from("/usr/bin").join(expected));
     }
 }
