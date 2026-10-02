@@ -22,12 +22,12 @@ Requires `~/.local/bin` on `PATH`. The binary reads its data file from
 
 ## Data
 
+Copy the example and edit it:
+
 ```bash
 mkdir -p ~/.pexposure
-cp portfolio.example.yaml ~/.pexposure/portfolio.yaml
+cp example/portfolio.yaml ~/.pexposure/portfolio.yaml
 ```
-
-Edit `~/.pexposure/portfolio.yaml`:
 
 ```yaml
 targets:            # % of total value; the sum IS the target leverage (1.30x)
@@ -50,11 +50,13 @@ holdings:           # current value per instrument; sum positions across brokers
 pexposure                          # nominal drift vs targets
 pexposure --composition            # also show the normalized-to-100 view
 pexposure 5000                     # rank single instruments for a 5000 investment
-pexposure 5000 LEV15              # report after investing 5000 in LEV15
+pexposure 5000 LEV15               # report after investing 5000 in LEV15
 pexposure 5000 --split             # split 5000 across all instruments
 pexposure 5000 --split --max 2     # split across at most 2 instruments
 pexposure my.yaml 5000 --split     # custom data file
 ```
+
+The data file can be given as the first argument; otherwise the default is used.
 
 ## Reading the output
 
