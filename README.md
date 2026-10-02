@@ -10,7 +10,20 @@ The motivating case: a leveraged fund can report `100` of value while providing 
 than `100` of exposure, split across several asset classes. It must be counted by that
 real exposure, not as a single class.
 
-## Build and install
+## Install
+
+```sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/anacromaniac/pexposure/releases/latest/download/pexposure-installer.sh | sh
+```
+
+Installs `pexposure` (and its updater) into `~/.cargo/bin`. Update to the latest
+release with:
+
+```sh
+pexposure --update
+```
+
+## Build from source
 
 ```bash
 cargo build --release
@@ -54,6 +67,7 @@ pexposure 5000 LEV15               # report after investing 5000 in LEV15
 pexposure 5000 --split             # split 5000 across all instruments
 pexposure 5000 --split --max 2     # split across at most 2 instruments
 pexposure my.yaml 5000 --split     # custom data file
+pexposure --update                 # install the latest release
 ```
 
 The data file can be given as the first argument; otherwise the default is used.
