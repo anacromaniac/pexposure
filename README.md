@@ -66,6 +66,9 @@ pexposure 5000                     # rank single instruments for a 5000 investme
 pexposure 5000 LEV15               # report after investing 5000 in LEV15
 pexposure 5000 --split             # split 5000 across all instruments
 pexposure 5000 --split --max 2     # split across at most 2 instruments
+pexposure --rebalance              # rebalance existing holdings, cash-neutral
+pexposure --rebalance --band 3     # rebalance with a +/-3pp class band
+pexposure --rebalance --leverage-band 0  # pull the leverage all the way to target
 pexposure my.yaml 5000 --split     # custom data file
 pexposure --update                 # install the latest release
 pexposure --usage                  # show command-line examples
@@ -91,6 +94,14 @@ whole portfolio is under-levered. Keeping them separate avoids chasing the wrong
 - `--split` minimizes the resulting drift and prefers fewer instruments and positions you
   already hold. `--max N` caps the number of instruments; it uses fewer when a second one
   would not reduce drift.
+- `--rebalance` moves value between instruments you already hold, keeping the capital
+  constant. It only touches classes drifting beyond `--band` (default 5pp), and stops at the
+  band edge rather than at the exact target. The overall leverage has its own, tighter
+  `--leverage-band` (default 1pp), because staying near the target leverage matters more
+  than a small sleeve a couple of points off. Set `--leverage-band 0` to pull the leverage
+  all the way to the target. It drops any leg below `--min` (default 0.5% of the portfolio).
+  These keep a rebalance coarse instead of paying fees to fit every class to the penny or
+  selling one instrument to buy many tiny ones.
 - Instruments with identical exposure are alternatives: only one is chosen, the other is
   shown as `(= TICKER)`.
 
