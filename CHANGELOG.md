@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0](https://github.com/anacromaniac/pexposure/compare/v0.3.0...v0.4.0) - 2026-10-02
+
+### Added
+
+- add --rebalance with a class band, a tighter leverage band and a minimum leg ([#9](https://github.com/anacromaniac/pexposure/pull/9))
+
 ### Added
 
 - add --rebalance to move existing holdings toward the targets, keeping the capital
